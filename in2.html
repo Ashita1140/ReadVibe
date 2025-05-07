@@ -1,0 +1,1687 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>BookSaw - Free Book Store HTML CSS Template</title>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="author" content="">
+	<meta name="keywords" content="">
+	<meta name="description" content="">
+
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+
+	<link rel="stylesheet" type="text/css" href="css/normalize.css">
+	<link rel="stylesheet" type="text/css" href="icomoon/icomoon.css">
+	<link rel="stylesheet" type="text/css" href="css/vendor.css">
+	<link rel="stylesheet" type="text/css" href="style.css">
+
+</head>
+<style>
+
+
+    .search-container {
+      position: left;
+      top: 20px;
+      right: 20px;
+    }
+
+    .search-icon {
+      cursor: pointer;
+      font-size: 28px;
+    }
+
+    .search-box {
+      display: none;
+      position: left;
+      top: 30px;
+      right: 0;
+      width: 200px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 6px;
+      box-sizing: border-box;
+    }
+
+    .dropdown {
+      display: none;
+      position: absolute;
+      top: 60px;
+      right: 0;
+      width: 200px;
+      border: 1px solid #ccc;
+      background: white;
+      z-index: 1000;
+    }
+
+    .dropdown div {
+      padding: 8px;
+      cursor: pointer;
+    }
+
+    .dropdown div:hover {
+      background-color: #f0f0f0;
+    }
+    .flipbook {
+    width: 1000px;
+    height: 600px;
+    align-items: center;
+}
+
+.flipbook .hard {
+    background: #c0392b !important;
+    color: #fff;
+    font-weight: bold;
+    border: none; 
+}
+
+.flipbook .hard small{
+  font-style: italic;
+  font-weight: lighter;
+  opacity: 0.7;
+  font-size: 14px;
+}
+
+.flipbook .page {
+    background: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+    gap: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.11);
+}
+
+.page img{
+  width: 70%;
+  object-fit: cover;
+  margin: auto;
+}
+
+.flipbook .page small{
+  font-size: 14px;
+    margin-bottom: 10px;
+}
+
+   
+    
+  </style>
+
+<body data-bs-spy="scroll" data-bs-target="#header" tabindex="0">
+
+	<div id="header-wrap">
+
+		<div class="top-content">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-6">
+						<div class="social-links">
+							<ul>
+								<li>
+									<a href="#"><i class="icon icon-facebook"></i></a>
+								</li>
+								<li>
+									<a href="#"><i class="icon icon-twitter"></i></a>
+								</li>
+								<li>
+									<a href="#"><i class="icon icon-youtube-play"></i></a>
+								</li>
+								<li>
+									<a href="#"><i class="icon icon-behance-square"></i></a>
+								</li>
+							</ul>
+						</div><!--social-links-->
+					</div>
+					<div class="col-md-6">
+						<div class="right-element">
+							<a href="logout.php" class="user-account for-buy"><i
+									class="icon icon-user"></i><span>Log Out</span></a>
+							<a href="" class="cart for-buy"><i class="icon icon-clipboard"></i><span>Dashboard
+							</span></a>
+
+							<div class="action-menu">
+<div class="search-container">
+  <span class="search-icon" onclick="toggleSearch()">⌕</span>
+  <div class="search-box" id="searchBox">
+   <input type="text" id="searchInput" oninput="filterDropdown()" placeholder="Search..." onkeydown="handleEnter(event)">
+  </div>
+  <div class="dropdown" id="dropdownList"></div>
+</div>
+
+<script>
+  const suggestions = [
+    { label: 'featured books', id: 'featured-books' },
+    { label: 'Popular Books', id: 'popular-books' },
+    { label: 'Best selling books', id: 'best-selling' },
+    { label: 'Education Books', id: 'education-books' },
+    { label: 'Books with offer', id: 'special-offer' },
+    { label: 'Read our articles', id: 'latest-blog' },
+    { label: 'Manga', id: 'manga' },
+     { label: 'FlipBox Books', id: 'flip' },
+
+  ];
+
+  function toggleSearch() {
+    const box = document.getElementById('searchBox');
+    const dropdown = document.getElementById('dropdownList');
+    box.style.display = box.style.display === 'block' ? 'none' : 'block';
+    dropdown.style.display = 'none';
+  }
+
+  function filterDropdown() {
+    const input = document.getElementById('searchInput').value.toLowerCase();
+    const dropdown = document.getElementById('dropdownList');
+    dropdown.innerHTML = '';
+
+    if (input === '') {
+      dropdown.style.display = 'none';
+      return;
+    }
+
+    const filtered = suggestions.filter(item => item.label.toLowerCase().includes(input));
+
+    if (filtered.length) {
+      dropdown.style.display = 'block';
+      filtered.forEach(item => {
+        const div = document.createElement('div');
+        div.textContent = item.label;
+        div.onclick = () => goToSection(item.id);
+        dropdown.appendChild(div);
+      });
+    } else {
+      dropdown.style.display = 'none';
+    }
+  }
+
+  function goToSection(id) {
+    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+    document.getElementById('dropdownList').style.display = 'none';
+  }
+
+  function handleEnter(event) {
+    if (event.key === 'Enter') {
+      const inputVal = event.target.value.toLowerCase();
+      const match = suggestions.find(item => item.label.toLowerCase() === inputVal);
+      if (match) {
+        goToSection(match.id);
+      }
+    }
+  }
+</script>
+									
+								</div>
+							</div>
+
+						</div><!--top-right-->
+					</div>
+
+				</div>
+			</div>
+		</div><!--top-content-->
+
+		<header id="header">
+			<div class="container-fluid">
+				<div class="row">
+
+					<div class="col-md-2">
+						<div class="main-logo">
+							<a href="index.html"><img style="height:60px;width:700px"src="motu1.png" alt="logo"></a>
+						</div>
+
+					</div>
+
+					<div class="col-md-10">
+
+						<nav id="navbar">
+							<div class="main-menu stellarnav">
+								<ul class="menu-list">
+									<li class="menu-item active"><a href="#home">Home</a></li>
+									<li class="menu-item has-sub">
+										<a href="#pages" class="nav-link">Pages</a>
+
+										<ul>
+											<li class="active"><a href="index.html">Home</a></li>
+											<li><a href="index.html">About</a></li>
+											<li><a href="index.html">Styles</a></li>
+											<li><a href="index.html">Blog</a></li>
+											<li><a href="index.html">Post Single</a></li>
+											<li><a href="index.html">Our Store</a></li>
+											<li><a href="index.html">Product Single</a></li>
+											<li><a href="index.html">Contact</a></li>
+											<li><a href="index.html">Thank You</a></li>
+										</ul>
+
+									</li>
+									<li class="menu-item"><a href="#featured-books" class="nav-link">Featured</a></li>
+									<li class="menu-item"><a href="#popular-books" class="nav-link">Popular</a></li>
+									<li class="menu-item"><a href="#special-offer" class="nav-link">Offer</a></li>
+									<li class="menu-item"><a href="#latest-blog" class="nav-link">Articles</a></li>
+									<li class="menu-item"><a href="#download-app" class="nav-link">Download App</a></li>
+								</ul>
+
+								<div class="hamburger">
+									<span class="bar"></span>
+									<span class="bar"></span>
+									<span class="bar"></span>
+								</div>
+
+							</div>
+						</nav>
+
+					</div>
+
+				</div>
+			</div>
+		</header>
+
+	</div><!--header-wrap-->
+
+	<section id="billboard">
+
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+
+					<button class="prev slick-arrow">
+						<i class="icon icon-arrow-left"></i>
+					</button>
+
+					<div class="main-slider pattern-overlay">
+						<div class="slider-item">
+							<div class="banner-content">
+								<h2 class="banner-title">Life of the Wild</h2>
+								<p>Books also foster empathy, as they let us step into the shoes of characters from varied backgrounds, helping us understand lives and experiences different from our own in a world full of distractions, books remains are forever companion.</p>
+								<div class="btn-wrap">
+									<a href="#" class="btn btn-outline-accent btn-accent-arrow">Read More<i
+											class="icon icon-ns-arrow-right"></i></a>
+								</div>
+							</div><!--banner-content-->
+							<img src="images/main-banner1.jpg" alt="banner" class="banner-image">
+						</div><!--slider-item-->
+
+						<div class="slider-item">
+							<div class="banner-content">
+								<h2 class="banner-title">Birds gonna be Happy</h2>
+								<p>Books also foster empathy, as they let us step into the shoes of characters from varied backgrounds, helping us understand lives and experiences different from our own in a world full of distractions, books remains are forever companion.</p>
+								<div class="btn-wrap">
+									<a href="#" class="btn btn-outline-accent btn-accent-arrow">Read More<i
+											class="icon icon-ns-arrow-right"></i></a>
+								</div>
+							</div><!--banner-content-->
+							<img src="images/main-banner2.jpg" alt="banner" class="banner-image">
+						</div><!--slider-item-->
+
+					</div><!--slider-->
+
+					<button class="next slick-arrow">
+						<i class="icon icon-arrow-right"></i>
+					</button>
+
+				</div>
+			</div>
+		</div>
+
+	</section>
+
+	<section id="client-holder" data-aos="fade-up">
+		<div class="container">
+			<div class="row">
+				<div class="inner-content">
+					<div class="logo-wrap">
+						<div class="grid">
+							<a href="#"><img src="images/client-image1.png" alt="client"></a>
+							<a href="#"><img src="images/client-image2.png" alt="client"></a>
+							<a href="#"><img src="images/client-image3.png" alt="client"></a>
+							<a href="#"><img src="images/client-image4.png" alt="client"></a>
+							<a href="#"><img src="images/client-image5.png" alt="client"></a>
+						</div>
+					</div><!--image-holder-->
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section id="featured-books" class="py-5 my-5">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+
+					<div class="section-header align-center">
+						<div class="title">
+							<span>Some quality items</span>
+						</div>
+						<a href="#featured.html"><h2 class="section-title">Featured Books</h2></a>
+					</div>
+ 
+					<div class="product-list" data-aos="fade-up">
+						<div class="row">
+
+							<div class="col-md-3">
+								<div class="product-item">
+									<figure class="product-style">
+										<img src="images/product-item1.jpg" alt="Books" class="product-item">
+										<a href="in4.php"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+											Cart</button></a>
+									</figure>
+									<figcaption>
+										<h3>Simple way of piece life</h3>
+										<span>Armor Ramsey</span>
+										<div class="item-price">₹400</div>
+									</figcaption>
+								</div>
+							</div>
+
+							<div class="col-md-3">
+								<div class="product-item">
+									<figure class="product-style">
+										<img src="images/product-item2.jpg" alt="Books" class="product-item">
+										<a href="in4.php"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+											Cart</button></a>
+									</figure>
+									<figcaption>
+										<h3>Great travel at desert</h3>
+										<span>Sanchit Howdy</span>
+										<div class="item-price">₹380</div>
+									</figcaption>
+								</div>
+							</div>
+
+							<div class="col-md-3">
+								<div class="product-item">
+									<figure class="product-style">
+										<img src="images/product-item3.jpg" alt="Books" class="product-item">
+										<a href="in4.php"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+											Cart</button></a>
+									</figure>
+									<figcaption>
+										<h3>The lady beauty Scarlett</h3>
+										<span>Arthur Doyle</span>
+										<div class="item-price">₹450</div>
+									</figcaption>
+								</div>
+							</div>
+
+							<div class="col-md-3">
+								<div class="product-item">
+									<figure class="product-style">
+										<img src="images/product-item4.jpg" alt="Books" class="product-item">
+										<a href="in4.php"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+											Cart</button></a>
+									</figure>
+									<figcaption>
+										<h3>Once upon a time</h3>
+										<span>Klien Marry</span>
+										<div class="item-price">₹350</div>
+									</figcaption>
+								</div>
+							</div>
+
+						</div><!--ft-books-slider-->
+					</div><!--grid-->
+
+
+				</div><!--inner-content-->
+			</div>
+
+			<div class="row">
+				<div class="col-md-12">
+
+					<div class="btn-wrap align-right">
+						<a href="#" class="btn-accent-arrow">View all products <i
+								class="icon icon-ns-arrow-right"></i></a>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section id="best-selling" class="leaf-pattern-overlay">
+		<div class="corner-pattern-overlay"></div>
+		<div class="container">
+			<div class="row justify-content-center">
+
+				<div class="col-md-8">
+
+					<div class="row">
+
+						<div class="col-md-6">
+							<figure class="products-thumb">
+								<img src="images/single-image.jpg" alt="book" class="single-image">
+							</figure>
+						</div>
+
+						<div class="col-md-6">
+							<div class="product-entry">
+								<h2 class="section-title divider">Best Selling Book</h2>
+
+								<div class="products-content">
+									<div class="author-name">By Timbur Hood</div>
+									<h3 class="item-title">Birds gonna be happy</h3>
+									<p>"Chirping with joy, they dance in the sun, a happy bird's song has just begun.
+with wings of freedom, they soar and fly, a happy bird's heart reaches for the sky."</p>
+									<div class="item-price">₹450</div>
+									<div class="btn-wrap">
+										<a href="in4.php" class="btn-accent-arrow">shop it now <i
+												class="icon icon-ns-arrow-right"></i></a>
+									</div>
+								</div>
+
+							</div>
+						</div>
+
+					</div>
+					<!-- / row -->
+
+				</div>
+
+			</div>
+		</div>
+	</section>
+
+	<section id="popular-books" class="bookshelf py-5 my-5">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+
+					<div class="section-header align-center">
+						<div class="title">
+							<span>Some quality items</span>
+						</div>
+						<a href="#popular.html"><h2 class="section-title">Popular Books</h2></a>
+					</div>
+
+					<ul class="tabs">
+						<li data-tab-target="#all-genre" class="active tab">All Genre</li>
+						<li data-tab-target="#business" class="tab">Business</li>
+						<li data-tab-target="#technology" class="tab">Technology</li>
+						<li data-tab-target="#romantic" class="tab">Romantic</li>
+						<li data-tab-target="#adventure" class="tab">Adventure</li>
+						<li data-tab-target="#fictional" class="tab">Fictional</li>
+					</ul>
+
+					<div class="tab-content">
+						<div id="all-genre" data-tab-content class="active">
+							<div class="row">
+
+								<div class="col-md-3">
+									<div class="product-item">
+										<figure class="product-style">
+											<img src="images/tab-item1.jpg" alt="Books" class="product-item">
+											<a href="in4.php"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+												Cart</button></a>
+										</figure>
+										<figcaption>
+											<h3>Portrait photography</h3>
+											<span>Adam Silber</span>
+											<div class="item-price">₹400</div>
+										</figcaption>
+									</div>
+								</div>
+
+								<div class="col-md-3">
+									<div class="product-item">
+										<figure class="product-style">
+											<img src="images/tab-item2.jpg" alt="Books" class="product-item">
+											<a href="in4.php"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+												Cart</button></a>
+										</figure>
+										<figcaption>
+											<h3>Once upon a time</h3>
+											<span>Klien Marry</span>
+											<div class="item-price">₹350</div>
+										</figcaption>
+									</div>
+								</div>
+
+								<div class="col-md-3">
+									<div class="product-item">
+										<figure class="product-style">
+											<img src="images/tab-item3.jpg" alt="Books" class="product-item">
+											<a href="in4.php"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+												Cart</button></a>
+										</figure>
+										<figcaption>
+											<h3>Tips of simple lifestyle</h3>
+											<span>Bratt Smith</span>
+											<div class="item-price">₹400</div>
+										</figcaption>
+									</div>
+								</div>
+
+								<div class="col-md-3">
+									<div class="product-item">
+										<figure class="product-style">
+											<img style="height:335px"src="ikigai.jpg" alt="Books" class="product-item">
+											<a href="in4.php"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+												Cart</button></a>
+										</figure>
+										<figcaption>
+											<h3>Ikigai</h3>
+											<span>Hector Garcia</span>
+											<div class="item-price">₹400</div>
+										</figcaption>
+									</div>
+								</div>
+
+							</div>
+							<div class="row">
+
+								<div class="col-md-3">
+									<div class="product-item">
+										<figure class="product-style">
+											<img src="images/tab-item5.jpg" alt="Books" class="product-item">
+											<a href="in4.php"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+												Cart</button></a>
+										</figure>
+										<figcaption>
+											<h3>Peaceful Enlightment</h3>
+											<span>Marmik Lama</span>
+											<div class="item-price">₹400</div>
+										</figcaption>
+									</div>
+								</div>
+
+								<div class="col-md-3">
+									<div class="product-item">
+										<figure class="product-style">
+											<img  style="height:335px"src="js.jpg" alt="Books" class="product-item">
+											<a href="in4.php"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+												Cart</button></a>
+										</figure>
+										<figcaption>
+											<h3>Journey to the Sea</h3>
+											<span>Sarah Brown</span>
+											<div class="item-price">₹400</div>
+										</figcaption>
+									</div>
+								</div>
+
+								<div class="col-md-3">
+									<div class="product-item">
+										<figure class="product-style">
+											<img src="images/tab-item7.jpg" alt="Books" class="product-item">
+											<a href="in4.php"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+												Cart</button></a>
+										</figure>
+										<figcaption>
+											<h3>Life along the Pirates</h3>
+											<span>Armor Ramsey</span>
+											<div class="item-price">₹400</div>
+										</figcaption>
+									</div>
+								</div>
+
+								<div class="col-md-3">
+									<div class="product-item">
+										<figure class="product-style">
+											<img style="height:335px"src="the.jpg" alt="Books" class="product-item">
+											<a href="in4.php"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+												Cart</button></a>
+										</figure>
+										<figcaption>
+											<h3>The way to the Sea</h3>
+											<span> Victoria Connelly </span>
+											<div class="item-price">₹380</div>
+										</figcaption>
+									</div>
+								</div>
+
+							</div>
+
+						</div>
+						<div id="business" data-tab-content>
+							<div class="row">
+								<div class="col-md-3">
+									<div class="product-item">
+										<figure class="product-style">
+											<img src="first.jpg" alt="Books" class="product-item">
+											<a href="in4.php"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+												Cart</button></a>
+										</figure>
+										<figcaption>
+											<h3>the first 90 days</h3>
+											<span>Michael D. Watkins</span>
+											<div class="item-price">₹450</div>
+										</figcaption>
+									</div>
+								</div>
+
+								<div class="col-md-3">
+									<div class="product-item">
+										<figure class="product-style">
+											<img src="tata.jpg" alt="Books" class="product-item">
+											<a href="in4.php"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+												Cart</button></a>
+										</figure>
+										<figcaption>
+											<h3>the story of TATA</h3>
+											<span>Peter Casey</span>
+											<div class="item-price">₹420</div>
+										</figcaption>
+									</div>
+								</div>
+
+								<div class="col-md-3">
+									<div class="product-item">
+										<figure class="product-style">
+											<img src="fi.jpg" alt="Books" class="product-item">
+											<a href="in4.php"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+												Cart</button></a>
+										</figure>
+										<figcaption>
+											<h3>financial intelligence</h3>
+											<span> Karen Berman</span>
+											<div class="item-price">₹430</div>
+										</figcaption>
+									</div>
+								</div>
+
+								<div class="col-md-3">
+									<div class="product-item">
+										<figure class="product-style">
+											<img src="think.jpg" alt="Books" class="product-item">
+											<a href="in4.php"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+												Cart</button></a>
+										</figure>
+										<figcaption>
+											<h3>Think and grow rich</h3>
+											<span>Napoleon Hill</span>
+											<div class="item-price">₹400</div>
+										</figcaption>
+									</div>
+								</div>
+
+							</div>
+						</div>
+
+						<div id="technology" data-tab-content>
+							<div class="row">
+								<div class="col-md-3">
+									<div class="product-item">
+										<figure class="product-style">
+											<img style="height:335px" src="coding.jpg" alt="Books" class="product-item">
+											<a href="in4.php"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+												Cart</button></a>
+										</figure>
+										<figcaption>
+											<h3>coding dummies</h3>
+											<span>CHRIS. MINNICK</span>
+											<div class="item-price">₹350</div>
+										</figcaption>
+									</div>
+								</div>
+
+								<div class="col-md-3">
+									<div class="product-item">
+										<figure class="product-style">
+											<img style="height:335px" src="ai.jpg" alt="Books" class="product-item">
+											<a href="in4.php"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+												Cart</button></a>
+										</figure>
+										<figcaption>
+											<h3>the foundations of ai</h3>
+											<span>Jose Valladares</span>
+											<div class="item-price">₹320</div>
+										</figcaption>
+									</div>
+								</div>
+
+								<div class="col-md-3">
+									<div class="product-item">
+										<figure class="product-style">
+											<img style="height:335px" src="it.jpg" alt="Books" class="product-item">
+											<a href="in4.php"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+												Cart</button></a>
+										</figure>
+										<figcaption>
+											<h3>Fundamentals of IT</h3>
+											<span>N Radhakrishnan</span>
+											<div class="item-price">₹400</div>
+										</figcaption>
+									</div>
+								</div>
+
+								<div class="col-md-3">
+									<div class="product-item">
+										<figure class="product-style">
+											<img style="height:335px"src="elon.jpg" alt="Books" class="product-item">
+											<a href="in4.php"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+												Cart</button></a>
+										</figure>
+										<figcaption>
+											<h3>ELON MUSK</h3>
+											<span>Ashlee Vange</span>
+											<div class="item-price">₹450</div>
+										</figcaption>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div id="romantic" data-tab-content>
+							<div class="row">
+								<div class="col-md-3">
+									<div class="product-item">
+										<figure class="product-style">
+											<img style="height:335px"src="to.jpg" alt="Books" class="product-item">
+											<a href="in4.php"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+												Cart</button></a>
+										</figure>
+										<figcaption>
+											<h3>to all the boys i loved before</h3>
+											<span>Jonny Han</span>
+											<div class="item-price">₹380</div>
+										</figcaption>
+									</div>
+								</div>
+
+								<div class="col-md-3">
+									<div class="product-item">
+										<figure class="product-style">
+											<img src="verity.jpg" alt="Books" class="product-item">
+											<a href="in4.php"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+												Cart</button></a>
+										</figure>
+										<figcaption>
+											<h3>verity</h3>
+											<span>Colleen Hoover</span>
+											<div class="item-price">₹420</div>
+										</figcaption>
+									</div>
+								</div>
+
+								<div class="col-md-3">
+									<div class="product-item">
+										<figure class="product-style">
+											<img src="kk.jpg" alt="Books" class="product-item">
+											<a href="in4.php"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+												Cart</button></a>
+										</figure>
+										<figcaption>
+											<h3>karen kingsbury</h3>
+											<span>Karen Kingsbury</span>
+											<div class="item-price">₹400</div>
+										</figcaption>
+									</div>
+								</div>
+
+								<div class="col-md-3">
+									<div class="product-item">
+										<figure class="product-style">
+											<img src="end.jpg" alt="Books" class="product-item">
+											<a href="in4.php"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+												Cart</button></a>
+										</figure>
+										<figcaption>
+											<h3>it ends with us</h3>
+											<span>Colleen Hoover</span>
+											<div class="item-price">₹320</div>
+										</figcaption>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div id="adventure" data-tab-content>
+							<div class="row">
+								<div class="col-md-3">
+									<div class="product-item">
+										<figure class="product-style">
+											<img src="ns.jpg" alt="Books" class="product-item">
+											<a href="in4.php"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+												Cart</button></a>
+										</figure>
+										<figcaption>
+											<h3>enola holmes</h3>
+											<span>Nancy Springer</span>
+											<div class="item-price">₹400</div>
+										</figcaption>
+									</div>
+								</div>
+                                                           <div class="col-md-3">
+									<div class="product-item">
+										<figure class="product-style">
+											<img src="pa.jpg" alt="Books" class="product-item">
+											<a href="in4.php"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+												Cart</button></a>
+										</figure>
+										<figcaption>
+											<h3>pearls of adventure</h3>
+											<span>Virad Mishra</span>
+											<div class="item-price">₹400</div>
+										</figcaption>
+									</div>
+								</div>
+                                                               <div class="col-md-3">
+									<div class="product-item">
+										<figure class="product-style">
+											<img src="puzzled.jpg" alt="Books" class="product-item">
+											<a href="in4.php"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+												Cart</button></a>
+										</figure>
+										<figcaption>
+											<h3>the puzzled</h3>
+											<span>P.J Nicoles</span>
+											<div class="item-price">₹400</div>
+										</figcaption>
+									</div>
+								</div>
+
+								<div class="col-md-3">
+									<div class="product-item">
+										<figure class="product-style">
+											<img src="sh.jpg" alt="Books" class="product-item">
+											<a href="in4.php"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+												Cart</button></a>
+										</figure>
+										<figcaption>
+											<h3>Sherlock Holmes</h3>
+											<span>Sir Arthur Conan Doyle</span>
+											<div class="item-price">₹450</div>
+										</figcaption>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div id="fictional" data-tab-content>
+							<div class="row">
+								<div class="col-md-3">
+									<div class="product-item">
+										<figure class="product-style">
+											<img style="height:335px"src="bluecastle.jpg" alt="Books" class="product-item">
+											<a href="in4.php"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+												Cart</button></a>
+										</figure>
+										<figcaption>
+											<h3>the bluecastle</h3>
+											<span> L.M Montgomery</span>
+											<div class="item-price">₹400</div>
+										</figcaption>
+									</div>
+								</div>
+                                                               <div class="col-md-3">
+									<div class="product-item">
+										<figure class="product-style">
+											<img style="height:320px"src="hp.jpg" alt="Books" class="product-item">
+											<a href="in4.php"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+												Cart</button></a>
+										</figure>
+										<figcaption>
+											<h3>Harry Potter and the Prisoner of Azkaban</h3>
+											<span>J.K. Rowling</span>
+											<div class="item-price">₹400</div>
+										</figcaption>
+									</div>
+								</div>
+<div class="col-md-3">
+									<div class="product-item">
+										<figure class="product-style">
+											<img style="height:335px"src="queen.jpg" alt="Books" class="product-item">
+											<a href="in4.php"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+												Cart</button></a>
+										</figure>
+										<figcaption>
+											<h3>the queen of nothing</h3>
+											<span>Holly Black</span>
+											<div class="item-price">₹400</div>
+										</figcaption>
+									</div>
+								</div>
+
+								<div class="col-md-3">
+									<div class="product-item">
+										<figure class="product-style">
+											<img style="height:335px"src="vd.jpg" alt="Books" class="product-item">
+											<a href="in4.php"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+												Cart</button></a>
+										</figure>
+										<figcaption>
+											<h3>Vampire Dairies</h3>
+											<span>L.J. Smith</span>
+											<div class="item-price">₹450</div>
+										</figcaption>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+
+				</div><!--inner-tabs-->
+
+			</div>
+		</div>
+	</section>
+<section id="education-books" class="py-5 my-5">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+
+					<div class="section-header align-center">
+						<div class="title">
+							<span>Some quality items</span>
+						</div>
+						<a href="#education.html"><h2 class="section-title">Education Books</h2></a>
+					</div>
+
+					<div class="product-list" data-aos="fade-up">
+						<div class="row">
+
+							<div class="col-md-3">
+								<div class="product-item">
+									<figure class="product-style">
+										<img style="height:335px"src="physics.jpg" alt="Books" class="product-item">
+										<a href="in4.php"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+											Cart</button></a>
+									</figure>
+									<figcaption>
+										<h3>quantum physics</h3>
+										<span>John Hernandez</span>
+										<div class="item-price">₹400</div>
+									</figcaption>
+								</div>
+							</div>
+
+							<div class="col-md-3">
+								<div class="product-item">
+									<figure class="product-style">
+										<img style="height:335px"src="aa.jpg" alt="Books" class="product-item">
+										<a href="in4.php"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+											Cart</button></a>
+									</figure>
+									<figcaption>
+										<h3>Advanced Accounting</h3>
+										<span> Debra C. Jeter</span>
+										<div class="item-price">₹380</div>
+									</figcaption>
+								</div>
+							</div>
+
+							<div class="col-md-3">
+								<div class="product-item">
+									<figure class="product-style">
+										<img style="height:320px"src="pat.jpg" alt="Books" class="product-item">
+										<a href="in4.php"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+											Cart</button></a>
+									</figure>
+									<figcaption>
+										<h3>Pharmacology and therapeutics</h3>
+										<span>Keith Hillier</span>
+										<div class="item-price">₹450</div>
+									</figcaption>
+								</div>
+							</div>
+
+							<div class="col-md-3">
+								<div class="product-item">
+									<figure class="product-style">
+										<img style="height:325px"src="fn.jpg" alt="Books" class="product-item">
+										<a href="in4.php"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+											Cart</button></a>
+									</figure>
+									<figcaption>
+										<h3>fundamentals of nursing</h3>
+										<span> Anne Perry</span>
+										<div class="item-price">₹350</div>
+									</figcaption>
+								</div>
+							</div>
+
+						</div><!--ft-books-slider-->
+					</div><!--grid-->
+
+
+				</div><!--inner-content-->
+			</div>
+
+			<div class="row">
+				<div class="col-md-12">
+
+					<div class="btn-wrap align-right">
+						<a href="#" class="btn-accent-arrow">View all products <i
+								class="icon icon-ns-arrow-right"></i></a>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</section>
+<section id="manga" class="py-5 my-5">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+
+					<div class="section-header align-center">
+						<div class="title">
+							<span>Some quality items</span>
+						</div>
+						<a href="#manga.html"><h2 class="section-title">Manga</h2></a>
+					</div>
+
+					<div class="product-list" data-aos="fade-up">
+						<div class="row">
+
+							<div class="col-md-3">
+								<div class="product-item">
+									<figure class="product-style">
+										<img src="hero.jpg" alt="Books" class="product-item">
+										<a href="in4.php"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+											Cart</button></a>
+									</figure>
+									<figcaption>
+										<h3>my hero academia</h3>
+										<span> Kohei Horikoshi</span>
+										<div class="item-price">₹400</div>
+									</figcaption>
+								</div>
+							</div>
+
+							<div class="col-md-3">
+								<div class="product-item">
+									<figure class="product-style">
+										<img src="ds.jpg" alt="Books" class="product-item">
+										<a href="in4.php"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+											Cart</button></a>
+									</figure>
+									<figcaption>
+										<h3>demon slayer</h3>
+										<span>Koyoharu Gotouge</span>
+										<div class="item-price">₹380</div>
+									</figcaption>
+								</div>
+							</div>
+
+							<div class="col-md-3">
+								<div class="product-item">
+									<figure class="product-style">
+										<img src="naruto.jpg" alt="Books" class="product-item">
+										<a href="in4.php"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+											Cart</button></a>
+									</figure>
+									<figcaption>
+										<h3>naruto</h3>
+										<span>Masashi Kishimoto</span>
+										<div class="item-price">₹450</div>
+									</figcaption>
+								</div>
+							</div>
+
+							<div class="col-md-3">
+								<div class="product-item">
+									<figure class="product-style">
+										<img src="goku.jpg" alt="Books" class="product-item">
+										<a href="in4.php"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+											Cart</button></a>
+									</figure>
+									<figcaption>
+										<h3>dargon ball</h3>
+										<span>Akira Toriyama</span>
+										<div class="item-price">₹350</div>
+									</figcaption>
+								</div>
+							</div>
+
+						</div><!--ft-books-slider-->
+					</div><!--grid-->
+
+
+				</div><!--inner-content-->
+			</div>
+
+			<div class="row">
+				<div class="col-md-12">
+
+					<div class="btn-wrap align-right">
+						<a href="#" class="btn-accent-arrow">View all products <i
+								class="icon icon-ns-arrow-right"></i></a>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</section>
+	<section id="flip" class="py-5 my-5">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+
+					<div class="section-header align-center">
+						<div class="title">
+							<span>Some quality items</span>
+						</div>
+						<a href="#manga.html"><h2 class="section-title">Flipbox Books</h2></a>
+					</div>
+
+					<div class="product-list" data-aos="fade-up">
+						<div class="row">
+
+
+							<div class="col-md-3">
+								<div class="product-item">
+									<figure class="product-style">
+										<img src="naruto.jpg" alt="Books" class="product-item">
+										<a href="in1.html"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">View 3D</button></a>
+									</figure>
+									<figcaption>
+										<h3>naruto</h3>
+										<span>Masashi Kishimoto</span>
+										<br>
+										<span>Volume1-2</span>
+										<div class="item-price"></div>
+									</figcaption>
+								</div>
+							</div>
+
+							<div class="col-md-3">
+								<div class="product-item">
+									<figure class="product-style">
+										<img src="goku.jpg" alt="Books" class="product-item">
+										<a href="in3.html"><button type="button" class="add-to-cart" data-product-tile="add-to-cart">View 3D</button></a>
+									</figure>
+									<figcaption>
+										<h3>dargon ball</h3>
+										<span>Akira Toriyama</span>
+										<br>
+										<span>Chapter 1-2</span>
+										<div class="item-price"></div>
+									</figcaption>
+								</div>
+							</div>
+
+						</div><!--ft-books-slider-->
+					</div><!--grid-->
+
+
+				</div><!--inner-content-->
+			</div>
+
+			<div class="row">
+				<div class="col-md-12">
+
+					
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section id="quotation" class="align-center pb-5 mb-5">
+		<div class="inner-content">
+			<h2 class="section-title divider">Quote of the day</h2>
+			<blockquote data-aos="fade-up">
+				<q>“The more that you read, the more things you will know. The more that you learn, the more places
+					you’ll go.”</q>
+				<div class="author-name">Dr. Seuss</div>
+			</blockquote>
+		</div>
+	</section>
+
+	<section id="special-offer" class="bookshelf pb-5 mb-5">
+
+		<div class="section-header align-center">
+			<div class="title">
+				<span>Grab your opportunity</span>
+			</div>
+			<h2 class="section-title">Books with offer</h2>
+		</div>
+
+		<div class="container">
+			<div class="row">
+				<div class="inner-content">
+					<div class="product-list" data-aos="fade-up">
+						<div class="grid product-grid">
+							<div class="product-item">
+								<figure class="product-style">
+									<img src="images/product-item5.jpg" alt="Books" class="product-item">
+									<button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+										Cart</button>
+								</figure>
+								<figcaption>
+									<h3>way of happiness</h3>
+									<span>Ananda Kumar</span>
+									<div class="item-price">
+										<span class="prev-price">₹500</span>₹400
+									</div>
+								</div>
+							</figcaption>
+
+							<div class="product-item">
+								<figure class="product-style">
+									<img src="images/product-item6.jpg" alt="Books" class="product-item">
+									<button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+										Cart</button>
+								</figure>
+								<figcaption>
+									<h3>life of seacrits</h3>
+									<span>Galista Marie</span>
+									<div class="item-price">
+										<span class="prev-price">₹350</span>₹310
+									</div>
+								</div>
+							</figcaption>
+
+							<div class="product-item">
+								<figure class="product-style">
+									<img src="images/product-item7.jpg" alt="Books" class="product-item">
+									<button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+										Cart</button>
+								</figure>
+								<figcaption>
+									<h3>fashion system</h3>
+									<span>Kevin Spear</span>
+									<div class="item-price">
+										<span class="prev-price">₹350</span>₹330
+									</div>
+								</div>
+							</figcaption>
+
+							<div class="product-item">
+								<figure class="product-style">
+									<img src="images/product-item8.jpg" alt="Books" class="product-item">
+									<button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+										Cart</button>
+								</figure>
+								<figcaption>
+									<h3>Once upon a time</h3>
+									<span>Klien Marry</span>
+									<div class="item-price">
+										<span class="prev-price">₹350</span>₹340
+									</div>
+								</div>
+							</figcaption>
+
+							<div class="product-item">
+								<figure class="product-style">
+									<img src="images/product-item2.jpg" alt="Books" class="product-item">
+									<button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+										Cart</button>
+								</figure>
+								<figcaption>
+									<h3>Simple way of piece life</h3>
+									<span>Armor Ramsey</span>
+									<div class="item-price">₹480</div>
+								</figcaption>
+							</div>
+
+						</div><!--grid-->
+					</div>
+				</div><!--inner-content-->
+			</div>
+		</div>
+	</section>
+
+	<section id="subscribe">
+		<div class="container">
+			<div class="row justify-content-center">
+
+				<div class="col-md-8">
+					<div class="row">
+
+						<div class="col-md-6">
+
+							<div class="title-element">
+								<h2 class="section-title divider">Subscribe to our newsletter</h2>
+							</div>
+
+						</div>
+						<div class="col-md-6">
+
+							<div class="subscribe-content" data-aos="fade-up">
+								<p><i>"Explore, Learn, and Connect: A World of Knowledge in Your Inbox."</i></p>
+								<form id="form">
+									<input type="text" name="email" placeholder="Enter your email address here">
+									<button class="btn-subscribe">
+										<span>send</span>
+										<i class="icon icon-send"></i>
+									</button>
+								</form>
+							</div>
+
+						</div>
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</section>
+
+	<section id="latest-blog" class="py-5 my-5">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+
+					<div class="section-header align-center">
+						<div class="title">
+							<span>Read our articles</span>
+						</div>
+						<h2 class="section-title">Latest Articles</h2>
+					</div>
+
+					<div class="row">
+
+						<div class="col-md-4">
+
+							<article class="column" data-aos="fade-up">
+
+								<figure>
+									<a href="#" class="image-hvr-effect">
+										<img src="images/post-img1.jpg" alt="post" class="post-image">
+									</a>
+								</figure>
+
+								<div class="post-item">
+									<div class="meta-date">Mar 30, 2021</div>
+									<h3><a href="#">Creativity Is a Process, Not an Event</a></h3>
+
+									<div class="links-element">
+										<div class="categories">inspiration</div>
+										<div class="social-links">
+											<ul>
+												<li>
+													<a href="#"><i class="icon icon-facebook"></i></a>
+												</li>
+												<li>
+													<a href="#"><i class="icon icon-twitter"></i></a>
+												</li>
+												<li>
+													<a href="#"><i class="icon icon-behance-square"></i></a>
+												</li>
+											</ul>
+										</div>
+									</div><!--links-element-->
+
+								</div>
+							</article>
+
+						</div>
+						<div class="col-md-4">
+
+							<article class="column" data-aos="fade-up" data-aos-delay="200">
+								<figure>
+									<a href="#" class="image-hvr-effect">
+										<img src="images/post-img2.jpg" alt="post" class="post-image">
+									</a>
+								</figure>
+								<div class="post-item">
+									<div class="meta-date">Mar 29, 2023</div>
+									<h3><a href="#">The Ultimate Productivity Hack is Saying No</a></h3>
+
+									<div class="links-element">
+										<div class="categories">inspiration</div>
+										<div class="social-links">
+											<ul>
+												<li>
+													<a href="#"><i class="icon icon-facebook"></i></a>
+												</li>
+												<li>
+													<a href="#"><i class="icon icon-twitter"></i></a>
+												</li>
+												<li>
+													<a href="#"><i class="icon icon-behance-square"></i></a>
+												</li>
+											</ul>
+										</div>
+									</div><!--links-element-->
+
+								</div>
+							</article>
+
+						</div>
+						<div class="col-md-4">
+
+							<article class="column" data-aos="fade-up" data-aos-delay="400">
+								<figure>
+									<a href="#" class="image-hvr-effect">
+										<img src="images/post-img3.jpg" alt="post" class="post-image">
+									</a>
+								</figure>
+								<div class="post-item">
+									<div class="meta-date">Feb 27, 2022</div>
+									<h3><a href="#">7 Ways to Retain More of Every Book You Read</a></h3>
+
+									<div class="links-element">
+										<div class="categories">inspiration</div>
+										<div class="social-links">
+											<ul>
+												<li>
+													<a href="#"><i class="icon icon-facebook"></i></a>
+												</li>
+												<li>
+													<a href="#"><i class="icon icon-twitter"></i></a>
+												</li>
+												<li>
+													<a href="#"><i class="icon icon-behance-square"></i></a>
+												</li>
+											</ul>
+										</div>
+									</div><!--links-element-->
+
+								</div>
+							</article>
+
+						</div>
+
+					</div>
+
+					<div class="row">
+
+						<div class="btn-wrap align-center">
+							<a href="#" class="btn btn-outline-accent btn-accent-arrow" tabindex="0">Read All Articles<i
+									class="icon icon-ns-arrow-right"></i></a>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</section>
+
+
+	<section id="download-app" class="leaf-pattern-overlay">
+		<div class="corner-pattern-overlay"></div>
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-md-8">
+					<div class="row">
+
+						<div class="col-md-5">
+							<figure>
+								<img src="logi.png" alt="phone" class="single-image">
+							</figure>
+						</div>
+
+						<div class="col-md-7">
+							<div class="app-info">
+								<h2 class="section-title divider">Download our app now !</h2>
+								<p>Books also foster empathy, as they let us step into the shoes of characters from varied backgrounds, helping us understand lives and experiences different from our own in a world full of distractions, books remains are forever companion.</p>
+								<div class="google-app">
+									<img src="images/google-play.jpg" alt="google play">
+									<img src="images/app-store.jpg" alt="app store">
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+
+
+
+
+
+
+
+<footer id="footer">
+		<div class="container">
+			<div class="row">
+
+				<div class="col-md-4">
+
+					<div class="footer-item">
+						<div class="company-brand">
+							<img style="height:90px;width:200px"src="motu1.png" alt="logo" class="footer-logo">
+							<p>Books also foster empathy, as they let us step into the shoes of characters from varied backgrounds, helping us understand lives and experiences different from our own in a world full of distractions, books remains are forever companion.</p>
+						</div>
+					</div>
+
+				</div>
+
+				<div class="col-md-2">
+
+					<div class="footer-menu">
+						<h5>About Us</h5>
+						<ul class="menu-list">
+							<li class="menu-item">
+								<a href="#">vision</a>
+							</li>
+							<li class="menu-item">
+								<a href="#">articles </a>
+							</li>
+							<li class="menu-item">
+								<a href="#">careers</a>
+							</li>
+							<li class="menu-item">
+								<a href="#">service terms</a>
+							</li>
+							<li class="menu-item">
+								<a href="#">donate</a>
+							</li>
+						</ul>
+					</div>
+
+				</div>
+				<div class="col-md-2">
+
+					<div class="footer-menu">
+						<h5>Discover</h5>
+						<ul class="menu-list">
+							<li class="menu-item">
+								<a href="#">Home</a>
+							</li>
+							<li class="menu-item">
+								<a href="#">Books</a>
+							</li>
+							<li class="menu-item">
+								<a href="#">Authors</a>
+							</li>
+							<li class="menu-item">
+								<a href="#">Subjects</a>
+							</li>
+							<li class="menu-item">
+								<a href="#">Advanced Search</a>
+							</li>
+						</ul>
+					</div>
+
+				</div>
+				<div class="col-md-2">
+
+					<div class="footer-menu">
+						<h5>My account</h5>
+						<ul class="menu-list">
+							<li class="menu-item">
+								<a href="#">Sign In</a>
+							</li>
+							<li class="menu-item">
+								<a href="#">View Cart</a>
+							</li>
+							<li class="menu-item">
+								<a href="#">My Wishtlist</a>
+							</li>
+							<li class="menu-item">
+								<a href="#">Track My Order</a>
+							</li>
+						</ul>
+					</div>
+
+				</div>
+				<div class="col-md-2">
+
+					<div class="footer-menu">
+						<h5>Help</h5>
+						<ul class="menu-list">
+							<li class="menu-item">
+								<a href="#">Help center</a>
+							</li>
+							<li class="menu-item">
+								<a href="#">Report a problem</a>
+							</li>
+							<li class="menu-item">
+								<a href="#">Suggesting edits</a>
+							</li>
+							<li class="menu-item">
+								<a href="#">Contact us</a>
+							</li>
+						</ul>
+					</div>
+
+				</div>
+
+			</div>
+			<!-- / row -->
+
+		</div>
+	</footer>
+
+	<div id="footer-bottom">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+
+					<div class="copyright">
+						<div class="row">
+
+							<div class="col-md-6">
+								<p>© 2025 All rights reserved.By Ashita and Bhumika Rana
+							</p>
+							</div>
+
+							<div class="col-md-6">
+								<div class="social-links align-right">
+									<ul>
+										<li>
+											<a href="#"><i class="icon icon-facebook"></i></a>
+										</li>
+										<li>
+											<a href="#"><i class="icon icon-twitter"></i></a>
+										</li>
+										<li>
+											<a href="#"><i class="icon icon-youtube-play"></i></a>
+										</li>
+										<li>
+											<a href="#"><i class="icon icon-behance-square"></i></a>
+										</li>
+									</ul>
+								</div>
+							</div>
+
+						</div>
+					</div><!--grid-->
+
+				</div><!--footer-bottom-content-->
+			</div>
+		</div>
+	</div>
+
+
+	<script src="js/jquery-1.11.0.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+		crossorigin="anonymous"></script>
+	<script src="js/plugins.js"></script>
+	<script src="js/script.js"></script>
+
+</body>
+
+</html>
